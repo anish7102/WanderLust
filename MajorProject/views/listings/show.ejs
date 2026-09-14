@@ -1,0 +1,207 @@
+<% layout("/layouts/boilerplate") %>
+
+  <br>
+
+  <body>
+    <div class="row">
+
+      <div class="col-6 offset-2">
+
+        <h3>
+          <%= listing.title %>
+        </h3>
+
+        <div class="card">
+          <img src="<%= listing.image.url %>" class="card-img-top show-img" alt="listing_image">
+        </div>
+
+        <!-- Owner -->
+        <p class="mt-2 mb-3">
+          <i>Owned by <%= listing.owner.username %></i>
+        </p>
+
+        <!-- Listing Details -->
+        <ul>
+          <li>
+            <%= listing.description %>
+          </li>
+
+          <li>
+            &#8377; <%= listing.price.toLocaleString("en-IN") %>
+          </li>
+
+          <li>
+            <%= listing.location %>
+          </li>
+
+          <li>
+            <%= listing.country %>
+          </li>
+        </ul>
+
+        <% if(currUser && listing.owner && listing.owner._id.equals(currUser._id)) { %>
+
+          <!-- Edit & Delete -->
+          <div class="d-flex align-items-center gap-2">
+
+            <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark edit-btn">
+              Edit this Listing
+            </a>
+
+            <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE" class="m-0">
+              <button class="btn btn-danger delete-btn">
+                Delete this listing
+              </button>
+            </form>
+
+          </div>
+          <% } %>
+
+          <!--Book Now-->
+            <% if(!currUser || !listing.owner._id.equals(currUser._id)) { %>
+
+              <form action="/listings/<%= listing._id %>/book" method="POST">
+                <button class="btn btn-success">Book Now</button>
+              </form>
+
+              <% } %>
+            <!--Book Now-->
+
+                <br>
+                <!-- Map-->
+                <div class="mb-3">
+                  <h5>Location of Place (Map)</h5>
+                  <div id="map" style="height: 300px; width: 125%;"></div>
+                </div>
+                <script>
+                  fetch(`https://nominatim.openstreetmap.org/search?format=json&q=<%= listing.location %>, <%= listing.country %>`)
+                    .then(response => response.json())
+                    .then(data => {
+
+                      if (data.length > 0) {
+
+                        const lat = parseFloat(data[0].lat);
+                        const lon = parseFloat(data[0].lon);
+
+                        const map = new maplibregl.Map({
+                          container: "map",
+                          style: "https://demotiles.maplibre.org/style.json",
+                          center: [lon, lat],
+                          zoom: 3
+                        });
+
+                        const marker = new maplibregl.Marker()
+                          .setLngLat([lon, lat])
+                          .addTo(map);
+
+                        const popup = new maplibregl.Popup({
+                          closeButton: false,
+                          closeOnClick: false
+                        }).setHTML("<b><%= listing.location %>, <%= listing.country %></b>");
+
+                        marker.getElement().addEventListener("mouseenter", () => {
+                          popup.setLngLat([lon, lat]).addTo(map);
+                        });
+
+                        marker.getElement().addEventListener("mouseleave", () => {
+                          popup.remove();
+                        });
+
+                      } else {
+                        document.getElementById("map").style.display = "none";
+
+                        document.getElementById("map").insertAdjacentHTML(
+                          "afterend",
+                          "<p class='text-danger'>Not found.</p>"
+                        );
+                      }
+                    });
+                </script>
+                <!-- Map-->
+
+                <br>
+
+                <% if(currUser) {%>
+                  <hr>
+
+                  <!-- Review Form -->
+
+                  <h5>Leave a Review</h5>
+
+                  <form action="/listings/<%= listing.id %>/reviews" method="POST">
+
+                    <div class="mb-3 mt-3">
+                      <label for="rating" class="form-label">Rating</label>
+
+                      <input type="range" min="1" max="5" id="rating" name="review[rating]" class="form-range">
+                    </div>
+
+                    <span id="ratingValue">Please select a rating</span>
+
+                    <div class="mb-3 mt-3">
+                      <label for="comment" class="form-label">Comments</label>
+
+                      <textarea name="review[comment]" id="comment" cols="30" rows="4" class="form-control"
+                        placeholder="Write Your Comment" required></textarea>
+                    </div>
+
+                    <button class="btn btn-outline-dark">
+                      Submit
+                    </button>
+
+                  </form>
+                  <% }%>
+
+                    <hr>
+
+                    <!-- All Reviews -->
+                    <h5>
+                      All Reviews
+                    </h5>
+
+                    <ul>
+                      <% for (review of listing.reviews) { %>
+
+                        <li>
+                          <i>
+                            <%= review.author ? review.author.username : "Unknown User" %>
+                          </i>, <%= review.comment %>, <%= review.rating %> stars
+                        </li>
+
+                        <form method="POST"
+                          action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
+                          <button class="btn btn-sm btn-danger mb-3">
+                            Delete Review
+                          </button>
+                        </form>
+
+                        <% } %>
+                    </ul>
+
+                    <script>
+                      const rating = document.getElementById("rating");
+                      const ratingValue = document.getElementById("ratingValue");
+                      const form = rating.closest("form");
+
+                      let ratingSelected = false;
+
+                      rating.addEventListener("input", function () {
+                        ratingSelected = true;
+                        ratingValue.innerText = "Rating: " + rating.value;
+                      });
+
+                      form.addEventListener("submit", function (event) {
+                        if (!ratingSelected) {
+                          event.preventDefault();
+                          alert("Please select a rating!");
+                        }
+                      });
+                    </script>
+
+      </div>
+
+    </div>
+
+    <br>
+
+  </body>
