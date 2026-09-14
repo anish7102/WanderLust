@@ -1,30 +1,28 @@
 # WanderLust
 
-WanderLust is a full-stack accommodation listing web application that allows users to explore properties, view listing details, create and manage their own listings, make bookings, and share reviews and ratings.
+WanderLust is a full-stack accommodation listing web application where users can explore places, view listing details, create their own listings, Book Now option for listings, add reviews, and manage their listings.
 
-The application is built using Node.js, Express.js, MongoDB, Mongoose, EJS, Passport.js, and Bootstrap.
+The project is built using **Node.js, Express.js, MongoDB, Mongoose, EJS, Passport.js, and Bootstrap**.
 
 ---
 
 ## Features
 
-- User registration and login
-- User authentication using Passport.js
-- Create new accommodation listings
-- Edit existing listings
-- Delete listings
-- View detailed listing information
-- Listing image support
-- Interactive location map
-- Book Now functionality
-- Add reviews and ratings
-- Delete reviews
-- Flash messages for user feedback
-- Protected routes for authenticated users
-- Owner-based listing management
-- Custom error handling
-- Responsive user interface
-- MongoDB database integration
+* User Signup & Login
+* Authentication using Passport.js
+* Create new listings
+* Edit existing listings
+* Delete listings
+* Book Now option for listings
+* View listing location on an interactive map
+* Add ratings and reviews
+* Delete reviews
+* Flash messages for user feedback
+* Protected routes for authenticated users
+* Listing images
+* Responsive UI using Bootstrap
+* Custom error handling
+* MongoDB database integration
 
 ---
 
@@ -32,32 +30,31 @@ The application is built using Node.js, Express.js, MongoDB, Mongoose, EJS, Pass
 
 ### Frontend
 
-- HTML5
-- CSS3
-- JavaScript
-- EJS
-- Bootstrap 5
-- Font Awesome
+* HTML
+* CSS
+* EJS
+* Bootstrap 5
+* Font Awesome
+* JavaScript
 
 ### Backend
 
-- Node.js
-- Express.js
-- Mongoose
-- Passport.js
-- Express Session
-- Connect Flash
-- Method Override
-- EJS-Mate
+* Node.js
+* Express.js
+* Mongoose
+* Passport.js
+* Express Session
+* Connect Flash
+* Method Override
 
 ### Database
 
-- MongoDB
+* MongoDB
 
-### APIs and Services
+### Other
 
-- OpenStreetMap
-- Nominatim
+* OpenStreetMap / Nominatim for location and map functionality
+* EJS-Mate for layouts
 
 ---
 
@@ -66,9 +63,13 @@ The application is built using Node.js, Express.js, MongoDB, Mongoose, EJS, Pass
 ```text
 MajorProject/
 │
+├── controllers/
+│
 ├── init/
 │   ├── data.js
 │   └── index.js
+│
+├── middleware.js
 │
 ├── models/
 │   ├── listing.js
@@ -76,8 +77,8 @@ MajorProject/
 │   └── user.js
 │
 ├── public/
-│   └── css/
-│       └── style.css
+│   ├── css/
+│   └── js/
 │
 ├── routes/
 │   ├── listing.js
@@ -91,19 +92,95 @@ MajorProject/
 │   ├── includes/
 │   ├── layouts/
 │   ├── listings/
-│   │   ├── edit.ejs
-│   │   ├── index.ejs
-│   │   ├── new.ejs
-│   │   └── show.ejs
-│   │
-│   ├── users/
-│   │   ├── login.ejs
-│   │   └── signup.ejs
-│   │
-│   └── error.ejs
+│   └── users/
 │
 ├── app.js
 ├── middleware.js
 ├── package.json
-├── package-lock.json
 └── README.md
+```
+
+## Authentication
+
+WanderLust uses **Passport.js** for user authentication.
+
+Users can:
+
+* Sign up
+* Log in
+* Log out
+* Create listings after logging in
+* Edit/delete their own listings
+* Add reviews to listings
+
+Protected routes ensure that users must be authenticated before performing certain actions.
+
+---
+
+## Listings
+
+Users can create accommodation listings containing:
+
+* Title
+* Description
+* Price
+* Location
+* Country
+* Image
+
+Each listing has its own details page where users can view information, location, reviews, and available actions.
+
+---
+
+## Reviews & Ratings
+
+Users can add reviews to listings with:
+
+* Comment
+* Rating from 1 to 5
+
+Reviews can also be deleted when permitted.
+
+---
+
+## Map Integration
+
+The project uses **OpenStreetMap** and **Nominatim** to find the location of a listing based on its location and country.
+
+The location is displayed on the listing details page.
+
+---
+
+## Flash Messages
+
+The application uses `connect-flash` to display messages such as:
+
+* Login required
+* Listing created successfully
+* Listing updated successfully
+* Listing deleted successfully
+* Review added successfully
+* Review deleted successfully
+* Validation/error messages
+
+---
+
+## Error Handling
+
+The project includes custom error handling using an `ExpressError` utility.
+
+This helps display user-friendly error pages instead of exposing raw server errors.
+
+---
+
+## Author
+
+**Anish**
+
+Computer Science & Engineering
+
+---
+
+## License
+
+This project is created for learning and educational purposes.
